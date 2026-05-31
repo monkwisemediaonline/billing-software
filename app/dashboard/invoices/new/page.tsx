@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { Plus, Trash2, Save } from "lucide-react";
-import { createClient } from "@supabase/supabase-js";
 
-type SupabaseClient = ReturnType<typeof createClient>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SupabaseClient = any;
 let supabaseClient: SupabaseClient | null = null;
 async function getSupabase(): Promise<SupabaseClient> {
   if (supabaseClient) return supabaseClient;
@@ -33,7 +33,7 @@ export default function NewInvoicePage() {
   const [items, setItems] = useState<Item[]>([{ item_name: "", quantity: 1, rate: 0, total: 0 }]);
 
   useEffect(() => {
-    getSupabase().then(s => s.from("clients").select("*").then(({ data }) => data && setClients(data as Client[])));
+    getSupabase().then(s => s.from("clients").select("*").then(({ data }: { data: Client[] | null }) => data && setClients(data)));
   }, []);
 
   function updateItem(index: number, field: keyof Item, value: string | number) {
@@ -55,14 +55,15 @@ export default function NewInvoicePage() {
       payment_status: "Unpaid", due_date: dueDate, notes,
     }]).select().single();
     if (error || !inv) { alert("Failed: " + (error?.message ?? "unknown")); return; }
-    await supabase.from("invoice_items").insert(items.map(item => ({ invoice_id: (inv as {id:string}).id, ...item })));
+    await supabase.from("invoice_items").insert(items.map((item: Item) => ({ invoice_id: inv.id, ...item })));
     alert("Invoice Created!");
     window.location.href = "/dashboard/invoices";
   }
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif" }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@700&display=swap');
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@700&display=swap');
         @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
         .fade { animation: fadeUp 0.4s ease both; }
         input:focus, select:focus, textarea:focus { border-color: rgba(168,85,247,0.5) !important; box-shadow: 0 0 0 3px rgba(168,85,247,0.1) !important; }
@@ -82,7 +83,7 @@ export default function NewInvoicePage() {
 
       {/* Main Card */}
       <div className="fade" style={{ background:"rgba(255,255,255,0.75)", backdropFilter:"blur(20px)", WebkitBackdropFilter:"blur(20px)", border:"1px solid rgba(139,92,246,0.15)", borderRadius:"20px", boxShadow:"0 8px 32px rgba(139,92,246,0.1)", padding:"28px", animationDelay:"0.05s" }}>
-        
+
         {/* Top fields */}
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"16px", marginBottom:"28px" }}>
           <input style={inp} placeholder="Invoice Number *" value={invoiceNumber} onChange={e => setInvoiceNumber(e.target.value)} />
@@ -116,7 +117,9 @@ export default function NewInvoicePage() {
                   <td style={{ padding:"10px 12px", width:"20%" }}>
                     <input type="number" style={{...inp, padding:"10px 12px"}} value={item.rate} onChange={e => updateItem(i, "rate", Number(e.target.value))} />
                   </td>
-                  <td style={{ padding:"10px 16px", fontWeight:"700", color:txt(0.9), fontFamily:"'Space Mono',monospace", fontSize:"14px" }}>₹{item.total.toLocaleString("en-IN")}</td>
+                  <td style={{ padding:"10px 16px", fontWeight:"700", color:txt(0.9), fontFamily:"'Space Mono',monospace", fontSize:"14px" }}>
+                    ₹{item.total.toLocaleString("en-IN")}
+                  </td>
                   <td style={{ padding:"10px 12px" }}>
                     <button onClick={() => setItems(items.filter((_,idx) => idx !== i))} style={{ background:"rgba(239,68,68,0.1)", border:"1px solid rgba(239,68,68,0.2)", borderRadius:"8px", padding:"6px 10px", color:"#dc2626", cursor:"pointer" }}>
                       <Trash2 size={15} />
@@ -134,7 +137,13 @@ export default function NewInvoicePage() {
 
         {/* Notes + Summary */}
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"20px" }}>
-          <textarea placeholder="Notes (optional)" rows={6} style={{...inp, resize:"none", fontFamily:"inherit"}} value={notes} onChange={e => setNotes(e.target.value)} />
+          <textarea
+            placeholder="Notes (optional)"
+            rows={6}
+            style={{...inp, resize:"none", fontFamily:"inherit"}}
+            value={notes}
+            onChange={e => setNotes(e.target.value)}
+          />
           <div style={{ background:"linear-gradient(135deg,rgba(217,70,239,0.06),rgba(139,92,246,0.08))", border:"1px solid rgba(139,92,246,0.15)", borderRadius:"16px", padding:"24px" }}>
             {[["Subtotal", `₹${subtotal.toLocaleString("en-IN")}`], ["Discount", `₹${Number(discount||0).toLocaleString("en-IN")}`]].map(([label, val]) => (
               <div key={label} style={{ display:"flex", justifyContent:"space-between", marginBottom:"16px" }}>
@@ -144,7 +153,9 @@ export default function NewInvoicePage() {
             ))}
             <div style={{ borderTop:"1px solid rgba(139,92,246,0.15)", paddingTop:"16px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
               <span style={{ fontWeight:"800", fontSize:"16px", color:txt(0.9) }}>Grand Total</span>
-              <span style={{ fontWeight:"800", fontSize:"22px", fontFamily:"'Space Mono',monospace", background:"linear-gradient(90deg,#d946ef,#8b5cf6)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>₹{grandTotal.toLocaleString("en-IN")}</span>
+              <span style={{ fontWeight:"800", fontSize:"22px", fontFamily:"'Space Mono',monospace", background:"linear-gradient(90deg,#d946ef,#8b5cf6)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>
+                ₹{grandTotal.toLocaleString("en-IN")}
+              </span>
             </div>
           </div>
         </div>
