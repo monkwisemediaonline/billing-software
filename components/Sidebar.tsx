@@ -62,9 +62,9 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div style={{
-      width: "260px", minHeight: "100vh",
-      background: "rgba(250,245,255,0.9)",
+    <div data-sidebar="true" style={{
+  width: "260px", minHeight: "100vh",
+  background: "rgba(250,245,255,0.9)",
       backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
       borderRight: "1px solid rgba(139,92,246,0.15)",
       display: "flex", flexDirection: "column",
