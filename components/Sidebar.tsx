@@ -71,28 +71,36 @@ export default function Sidebar() {
       position: "sticky", top: 0, height: "100vh", zIndex: 10,
     }}>
 
-      {/* Logo */}
-      <div style={{ padding: "28px 24px 24px", borderBottom: "1px solid rgba(139,92,246,0.1)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <div style={{
-            width: "38px", height: "38px", borderRadius: "11px",
-            background: "linear-gradient(135deg, #d946ef, #8b5cf6)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: "16px", fontWeight: "800", color: "white",
-            boxShadow: "0 4px 15px rgba(217,70,239,0.35)", flexShrink: 0,
-          }}>B</div>
-          <div>
-            <div style={{
-              fontWeight: "800", fontSize: "15px", letterSpacing: "-0.02em",
-              background: "linear-gradient(90deg, #d946ef, #8b5cf6)",
-              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-            }}>BillFlow</div>
-            <div style={{ fontSize: "10px", color: "rgba(26,10,46,0.4)", letterSpacing: "0.1em", fontWeight: "600" }}>
-              BUSINESS SUITE
-            </div>
-          </div>
-        </div>
+     {/* Logo */}
+<div style={{ padding: "24px 20px", borderBottom: "1px solid rgba(139,92,246,0.1)" }}>
+  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+    <svg width="38" height="38" viewBox="0 0 44 44" fill="none" style={{ flexShrink: 0 }}>
+      <defs>
+        <linearGradient id="sg1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#00d4ff"/>
+          <stop offset="100%" stopColor="#7c3aed"/>
+        </linearGradient>
+        <linearGradient id="sg2" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#7c3aed"/>
+          <stop offset="100%" stopColor="#4f46e5"/>
+        </linearGradient>
+      </defs>
+      <polygon points="22,2 40,12 40,32 22,42 4,32 4,12" fill="none" stroke="url(#sg1)" strokeWidth="2.5"/>
+      <polygon points="22,10 34,17 34,31 22,38 10,31 10,17" fill="none" stroke="url(#sg2)" strokeWidth="1.5" opacity="0.6"/>
+      <rect x="17" y="17" width="10" height="10" rx="2" fill="url(#sg1)"/>
+    </svg>
+    <div>
+      <div style={{
+        fontWeight: "800", fontSize: "17px", letterSpacing: "-0.02em",
+        background: "linear-gradient(90deg, #d946ef, #8b5cf6, #3b82f6)",
+        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+      }}>Qubrix</div>
+      <div style={{ fontSize: "9px", color: "rgba(26,10,46,0.4)", letterSpacing: "0.12em", fontWeight: "700" }}>
+        BILLING SUITE
       </div>
+    </div>
+  </div>
+</div>
 
       {/* Nav */}
       <nav style={{ flex: 1, padding: "16px 12px", overflowY: "auto" }}>

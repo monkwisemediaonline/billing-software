@@ -108,30 +108,40 @@ export default function DashboardPage() {
         .row-hover:hover { background: rgba(139,92,246,0.04) !important; }
       `}</style>
 
-      {/* Header */}
-      <div style={{ animation: "fadeUp 0.4s ease both", marginBottom: "36px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "6px" }}>
-          <div style={{
-            width: "40px", height: "40px", borderRadius: "12px",
-            background: "linear-gradient(135deg, #d946ef, #8b5cf6)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            boxShadow: "0 4px 20px rgba(217,70,239,0.35)",
-          }}>
-            <Zap size={20} color="white" fill="white" />
-          </div>
-          <h1 style={{
-            fontSize: "28px", fontWeight: "800", margin: 0,
-            background: "linear-gradient(90deg, #d946ef, #a855f7, #ec4899)",
-            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-            backgroundClip: "text", letterSpacing: "-0.03em",
-          }}>
-            Command Center
-          </h1>
-        </div>
-        <p style={{ color: txt(0.4), fontSize: "14px", margin: 0, paddingLeft: "52px" }}>
-          {new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
-        </p>
-      </div>
+     {/* Header */}
+<div style={{ animation: "fadeUp 0.4s ease both", marginBottom: "36px" }}>
+  <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "6px" }}>
+    <svg width="40" height="40" viewBox="0 0 44 44" fill="none" style={{ flexShrink: 0 }}>
+      <defs>
+        <linearGradient id="dg1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#00d4ff"/>
+          <stop offset="100%" stopColor="#7c3aed"/>
+        </linearGradient>
+        <linearGradient id="dg2" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#7c3aed"/>
+          <stop offset="100%" stopColor="#4f46e5"/>
+        </linearGradient>
+      </defs>
+      <polygon points="22,2 40,12 40,32 22,42 4,32 4,12" fill="none" stroke="url(#dg1)" strokeWidth="2.5"/>
+      <polygon points="22,10 34,17 34,31 22,38 10,31 10,17" fill="none" stroke="url(#dg2)" strokeWidth="1.5" opacity="0.6"/>
+      <rect x="17" y="17" width="10" height="10" rx="2" fill="url(#dg1)"/>
+    </svg>
+    <div>
+      <h1 style={{
+        fontSize: "28px", fontWeight: "800", margin: 0,
+        background: "linear-gradient(90deg, #d946ef, #a855f7, #3b82f6)",
+        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+        backgroundClip: "text", letterSpacing: "-0.03em",
+      }}>Qubrix</h1>
+      <p style={{ color: "rgba(26,10,46,0.4)", fontSize: "11px", margin: 0, letterSpacing: "0.1em", fontWeight: "700" }}>
+        BILLING SUITE
+      </p>
+    </div>
+  </div>
+  <p style={{ color: txt(0.4), fontSize: "14px", margin: "8px 0 0 52px" }}>
+    {new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+  </p>
+</div>
 
       {/* Stat Cards */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "18px", marginBottom: "28px" }}>
