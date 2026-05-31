@@ -339,3 +339,38 @@ select option {
   * { box-shadow: none !important; }
   button { display: none !important; }
 }
+@media print {
+  /* Hide URL, date, page numbers shown by browser */
+  @page {
+    margin: 0;
+    size: A4;
+  }
+
+  /* Hide everything by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Show only invoice content */
+  #invoice-content,
+  #invoice-content * {
+    visibility: visible;
+  }
+
+  #invoice-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 24px;
+    box-sizing: border-box;
+  }
+
+  /* Hide sidebar, action buttons, header */
+  [data-sidebar="true"],
+  .no-print,
+  nav,
+  aside {
+    display: none !important;
+  }
+}
