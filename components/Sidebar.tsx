@@ -205,30 +205,51 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div style={{ padding: "16px 12px", borderTop: "1px solid rgba(139,92,246,0.1)" }}>
-        <div style={{
-          padding: "12px 14px", borderRadius: "12px",
-          background: "linear-gradient(135deg, rgba(217,70,239,0.08), rgba(139,92,246,0.08))",
-          border: "1px solid rgba(168,85,247,0.15)",
-          display: "flex", alignItems: "center", gap: "10px",
-        }}>
-          <div style={{
-            width: "32px", height: "32px", borderRadius: "50%",
-            background: "linear-gradient(135deg, #d946ef, #8b5cf6)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: "13px", fontWeight: "700", color: "white", flexShrink: 0,
-            boxShadow: "0 2px 8px rgba(217,70,239,0.3)",
-          }}>A</div>
-          <div>
-            <div style={{ fontSize: "13px", fontWeight: "700", color: "rgba(26,10,46,0.85)" }}>
-              Admin
-            </div>
-            <div style={{ fontSize: "11px", color: "rgba(26,10,46,0.4)" }}>
-              Administrator
-            </div>
-          </div>
-        </div>
+<div style={{ padding: "16px 12px", borderTop: "1px solid rgba(139,92,246,0.1)" }}>
+  <div style={{
+    padding: "12px 14px", borderRadius: "12px",
+    background: "linear-gradient(135deg, rgba(217,70,239,0.08), rgba(139,92,246,0.08))",
+    border: "1px solid rgba(168,85,247,0.15)",
+    display: "flex", alignItems: "center", gap: "10px",
+  }}>
+    <div style={{
+      width: "32px", height: "32px", borderRadius: "50%",
+      background: "linear-gradient(135deg, #d946ef, #8b5cf6)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      fontSize: "13px", fontWeight: "700", color: "white", flexShrink: 0,
+      boxShadow: "0 2px 8px rgba(217,70,239,0.3)",
+    }}>A</div>
+    <div style={{ flex: 1 }}>
+      <div style={{ fontSize: "13px", fontWeight: "700", color: "rgba(26,10,46,0.85)" }}>
+        Admin
+      </div>
+      <div style={{ fontSize: "11px", color: "rgba(26,10,46,0.4)" }}>
+        Administrator
       </div>
     </div>
-  );
+    <button
+      onClick={async () => {
+        const { createClient } = await import("@/lib/client");
+        const supabase = createClient();
+        await supabase.auth.signOut();
+        window.location.href = "/login";
+      }}
+      style={{
+        background: "rgba(239,68,68,0.08)",
+        border: "1px solid rgba(239,68,68,0.2)",
+        borderRadius: "8px",
+        padding: "6px 10px",
+        color: "#dc2626",
+        cursor: "pointer",
+        fontSize: "11px",
+        fontWeight: "700",
+        flexShrink: 0,
+      }}
+    >
+      Logout
+    </button>
+  </div>
+</div>
+            </div>
+      
 }
