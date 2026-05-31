@@ -21,39 +21,24 @@ type Payment = {
 };
 
 const cardStyles = [
-  {
-    grad: "linear-gradient(135deg, #d946ef, #a21caf)",
-    glow: "rgba(217,70,239,0.2)",
-    shimmer: "#f0abfc",
-  },
-  {
-    grad: "linear-gradient(135deg, #f43f5e, #be123c)",
-    glow: "rgba(244,63,94,0.2)",
-    shimmer: "#fda4af",
-  },
-  {
-    grad: "linear-gradient(135deg, #8b5cf6, #5b21b6)",
-    glow: "rgba(139,92,246,0.2)",
-    shimmer: "#c4b5fd",
-  },
-  {
-    grad: "linear-gradient(135deg, #ec4899, #9d174d)",
-    glow: "rgba(236,72,153,0.2)",
-    shimmer: "#f9a8d4",
-  },
+  { grad: "linear-gradient(135deg, #d946ef, #a21caf)", glow: "rgba(217,70,239,0.2)", shimmer: "#f0abfc" },
+  { grad: "linear-gradient(135deg, #f43f5e, #be123c)", glow: "rgba(244,63,94,0.2)",  shimmer: "#fda4af" },
+  { grad: "linear-gradient(135deg, #8b5cf6, #5b21b6)", glow: "rgba(139,92,246,0.2)", shimmer: "#c4b5fd" },
+  { grad: "linear-gradient(135deg, #ec4899, #9d174d)", glow: "rgba(236,72,153,0.2)", shimmer: "#f9a8d4" },
 ];
 
 export default function DashboardPage() {
-  const [totalRevenue, setTotalRevenue] = useState(0);
-  const [totalDue, setTotalDue] = useState(0);
+  const [totalRevenue, setTotalRevenue]   = useState(0);
+  const [totalDue, setTotalDue]           = useState(0);
   const [totalExpenses, setTotalExpenses] = useState(0);
-  const [totalBalance, setTotalBalance] = useState(0);
+  const [totalBalance, setTotalBalance]   = useState(0);
   const [recentInvoices, setRecentInvoices] = useState<Invoice[]>([]);
   const [recentPayments, setRecentPayments] = useState<Payment[]>([]);
 
   useEffect(() => {
     async function fetchData() {
-      let supabase: ReturnType<typeof import("@supabase/supabase-js").createClient>;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let supabase: any;
       try {
         const mod = await import("@/lib/client");
         supabase = mod.createClient();
@@ -70,10 +55,10 @@ export default function DashboardPage() {
         .from("payments").select("*, invoices(client_name)")
         .order("created_at", { ascending: false }).limit(5);
 
-      setTotalRevenue(invoices?.reduce((s, i) => s + Number(i.total_amount || 0), 0) || 0);
-      setTotalDue(invoices?.reduce((s, i) => s + Number(i.due_amount || 0), 0) || 0);
-      setTotalExpenses(expenses?.reduce((s, e) => s + Number(e.amount || 0), 0) || 0);
-      setTotalBalance(accounts?.reduce((s, a) => s + Number(a.balance || 0), 0) || 0);
+      setTotalRevenue(invoices?.reduce((s: number, i: Invoice) => s + Number(i.total_amount || 0), 0) || 0);
+      setTotalDue(invoices?.reduce((s: number, i: Invoice) => s + Number(i.due_amount || 0), 0) || 0);
+      setTotalExpenses(expenses?.reduce((s: number, e: { amount: number }) => s + Number(e.amount || 0), 0) || 0);
+      setTotalBalance(accounts?.reduce((s: number, a: { balance: number }) => s + Number(a.balance || 0), 0) || 0);
       setRecentInvoices(invoices?.slice(0, 5) || []);
       setRecentPayments(payments || []);
     }
@@ -134,16 +119,14 @@ export default function DashboardPage() {
           }}>
             <Zap size={20} color="white" fill="white" />
           </div>
-          <div>
-            <h1 style={{
-              fontSize: "28px", fontWeight: "800", margin: 0,
-              background: "linear-gradient(90deg, #d946ef, #a855f7, #ec4899)",
-              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-              backgroundClip: "text", letterSpacing: "-0.03em",
-            }}>
-              Command Center
-            </h1>
-          </div>
+          <h1 style={{
+            fontSize: "28px", fontWeight: "800", margin: 0,
+            background: "linear-gradient(90deg, #d946ef, #a855f7, #ec4899)",
+            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+            backgroundClip: "text", letterSpacing: "-0.03em",
+          }}>
+            Command Center
+          </h1>
         </div>
         <p style={{ color: txt(0.4), fontSize: "14px", margin: 0, paddingLeft: "52px" }}>
           {new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
@@ -157,14 +140,10 @@ export default function DashboardPage() {
           const s = cardStyles[i];
           return (
             <div key={card.title} className="card-anim stat-card" style={{
-              borderRadius: "20px",
-              background: s.grad,
-              padding: "24px",
-              position: "relative",
-              overflow: "hidden",
+              borderRadius: "20px", background: s.grad, padding: "24px",
+              position: "relative", overflow: "hidden",
               boxShadow: `0 8px 32px ${s.glow}, 0 0 0 1px rgba(255,255,255,0.15)`,
             }}>
-              {/* Glow orb */}
               <div style={{
                 position: "absolute", top: "-30px", right: "-30px",
                 width: "120px", height: "120px", borderRadius: "50%",
@@ -172,7 +151,6 @@ export default function DashboardPage() {
                 animation: "pulseGlow 3s ease-in-out infinite",
                 animationDelay: `${i * 0.4}s`,
               }} />
-              {/* Bottom shimmer */}
               <div style={{
                 position: "absolute", bottom: 0, left: 0, right: 0, height: "2px",
                 background: `linear-gradient(90deg, transparent, ${s.shimmer}, transparent)`,
@@ -180,20 +158,12 @@ export default function DashboardPage() {
                 animation: "shimmer 2.5s linear infinite",
                 animationDelay: `${i * 0.3}s`,
               }} />
-
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", position: "relative" }}>
                 <div>
-                  <p style={{
-                    color: "rgba(255,255,255,0.8)", fontSize: "11px", fontWeight: "700",
-                    letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 12px",
-                  }}>
+                  <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "11px", fontWeight: "700", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 12px" }}>
                     {card.title}
                   </p>
-                  <h2 style={{
-                    fontSize: "24px", fontWeight: "800", color: "white",
-                    margin: "0 0 10px", letterSpacing: "-0.02em",
-                    fontFamily: "'Space Mono', monospace",
-                  }}>
+                  <h2 style={{ fontSize: "24px", fontWeight: "800", color: "white", margin: "0 0 10px", letterSpacing: "-0.02em", fontFamily: "'Space Mono', monospace" }}>
                     ₹{card.value.toLocaleString("en-IN")}
                   </h2>
                   <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
@@ -205,8 +175,7 @@ export default function DashboardPage() {
                 </div>
                 <div style={{
                   width: "44px", height: "44px", borderRadius: "13px",
-                  background: "rgba(255,255,255,0.18)",
-                  backdropFilter: "blur(8px)",
+                  background: "rgba(255,255,255,0.18)", backdropFilter: "blur(8px)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   border: "1px solid rgba(255,255,255,0.25)",
                 }}>
@@ -223,46 +192,29 @@ export default function DashboardPage() {
 
         {/* Recent Invoices */}
         <div className="table-anim" style={{
-          borderRadius: "20px",
-          background: "rgba(255,255,255,0.75)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          border: "1px solid rgba(139,92,246,0.15)",
-          overflow: "hidden",
-          boxShadow: "0 8px 32px rgba(139,92,246,0.1)",
-          animationDelay: "0.35s",
+          borderRadius: "20px", background: "rgba(255,255,255,0.75)",
+          backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+          border: "1px solid rgba(139,92,246,0.15)", overflow: "hidden",
+          boxShadow: "0 8px 32px rgba(139,92,246,0.1)", animationDelay: "0.35s",
         }}>
-          <div style={{
-            padding: "20px 24px 16px",
-            borderBottom: "1px solid rgba(139,92,246,0.08)",
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-          }}>
+          <div style={{ padding: "20px 24px 16px", borderBottom: "1px solid rgba(139,92,246,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <div style={{
-                width: "8px", height: "8px", borderRadius: "50%",
-                background: "linear-gradient(135deg, #d946ef, #f472b6)",
-                boxShadow: "0 0 8px rgba(217,70,239,0.6)",
-              }} />
-              <h2 style={{ fontSize: "15px", fontWeight: "700", color: txt(0.9), margin: 0 }}>
-                Recent Invoices
-              </h2>
+              <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "linear-gradient(135deg, #d946ef, #f472b6)", boxShadow: "0 0 8px rgba(217,70,239,0.6)" }} />
+              <h2 style={{ fontSize: "15px", fontWeight: "700", color: txt(0.9), margin: 0 }}>Recent Invoices</h2>
             </div>
             <span style={{ fontSize: "11px", color: txt(0.35), fontWeight: "600", letterSpacing: "0.08em" }}>LAST 5</span>
           </div>
-
           <div>
             {recentInvoices.length === 0 ? (
-              <div style={{ padding: "40px", textAlign: "center", color: txt(0.3), fontSize: "14px" }}>
-                No invoices yet
-              </div>
+              <div style={{ padding: "40px", textAlign: "center", color: txt(0.3), fontSize: "14px" }}>No invoices yet</div>
             ) : recentInvoices.map((inv, i) => {
-              const colors = [["#d946ef","#a21caf"],["#f43f5e","#be123c"],["#8b5cf6","#5b21b6"],["#ec4899","#9d174d"],["#d946ef","#8b5cf6"]];
+              const colors: [string, string][] = [["#d946ef","#a21caf"],["#f43f5e","#be123c"],["#8b5cf6","#5b21b6"],["#ec4899","#9d174d"],["#d946ef","#8b5cf6"]];
               const [c1, c2] = colors[i % colors.length];
               return (
                 <div key={inv.id} className="row-hover" style={{
                   display: "flex", alignItems: "center", justifyContent: "space-between",
                   padding: "14px 24px",
-                  borderBottom: i < recentInvoices.length - 1 ? `1px solid rgba(139,92,246,0.06)` : "none",
+                  borderBottom: i < recentInvoices.length - 1 ? "1px solid rgba(139,92,246,0.06)" : "none",
                 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                     <div style={{
@@ -275,17 +227,13 @@ export default function DashboardPage() {
                       {inv.client_name?.[0]?.toUpperCase() ?? "?"}
                     </div>
                     <div>
-                      <p style={{ margin: 0, fontSize: "13px", fontWeight: "600", color: txt(0.9) }}>
-                        {inv.invoice_number}
-                      </p>
-                      <p style={{ margin: 0, fontSize: "11px", color: txt(0.45) }}>
-                        {inv.client_name}
-                      </p>
+                      <p style={{ margin: 0, fontSize: "13px", fontWeight: "600", color: txt(0.9) }}>{inv.invoice_number}</p>
+                      <p style={{ margin: 0, fontSize: "11px", color: txt(0.45) }}>{inv.client_name}</p>
                     </div>
                   </div>
                   <div style={{ textAlign: "right" }}>
                     <p style={{ margin: "0 0 5px", fontSize: "14px", fontWeight: "700", color: txt(0.9), fontFamily: "'Space Mono', monospace" }}>
-                      ₹{inv.total_amount.toLocaleString("en-IN")}
+                      ₹{Number(inv.total_amount).toLocaleString("en-IN")}
                     </p>
                     <span style={{ ...statusStyle(inv.payment_status), borderRadius: "999px", padding: "2px 10px", fontSize: "10px", fontWeight: "700", letterSpacing: "0.05em" }}>
                       {inv.payment_status}
@@ -299,38 +247,21 @@ export default function DashboardPage() {
 
         {/* Recent Payments */}
         <div className="table-anim" style={{
-          borderRadius: "20px",
-          background: "rgba(255,255,255,0.75)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          border: "1px solid rgba(139,92,246,0.15)",
-          overflow: "hidden",
-          boxShadow: "0 8px 32px rgba(139,92,246,0.1)",
-          animationDelay: "0.42s",
+          borderRadius: "20px", background: "rgba(255,255,255,0.75)",
+          backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+          border: "1px solid rgba(139,92,246,0.15)", overflow: "hidden",
+          boxShadow: "0 8px 32px rgba(139,92,246,0.1)", animationDelay: "0.42s",
         }}>
-          <div style={{
-            padding: "20px 24px 16px",
-            borderBottom: "1px solid rgba(139,92,246,0.08)",
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-          }}>
+          <div style={{ padding: "20px 24px 16px", borderBottom: "1px solid rgba(139,92,246,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <div style={{
-                width: "8px", height: "8px", borderRadius: "50%",
-                background: "linear-gradient(135deg, #34d399, #059669)",
-                boxShadow: "0 0 8px rgba(52,211,153,0.6)",
-              }} />
-              <h2 style={{ fontSize: "15px", fontWeight: "700", color: txt(0.9), margin: 0 }}>
-                Recent Payments
-              </h2>
+              <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "linear-gradient(135deg, #34d399, #059669)", boxShadow: "0 0 8px rgba(52,211,153,0.6)" }} />
+              <h2 style={{ fontSize: "15px", fontWeight: "700", color: txt(0.9), margin: 0 }}>Recent Payments</h2>
             </div>
             <span style={{ fontSize: "11px", color: txt(0.35), fontWeight: "600", letterSpacing: "0.08em" }}>LAST 5</span>
           </div>
-
           <div>
             {recentPayments.length === 0 ? (
-              <div style={{ padding: "40px", textAlign: "center", color: txt(0.3), fontSize: "14px" }}>
-                No payments yet
-              </div>
+              <div style={{ padding: "40px", textAlign: "center", color: txt(0.3), fontSize: "14px" }}>No payments yet</div>
             ) : recentPayments.map((pay, i) => (
               <div key={pay.id} className="row-hover" style={{
                 display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -340,8 +271,7 @@ export default function DashboardPage() {
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                   <div style={{
                     width: "36px", height: "36px", borderRadius: "10px",
-                    background: "rgba(52,211,153,0.12)",
-                    border: "1px solid rgba(52,211,153,0.25)",
+                    background: "rgba(52,211,153,0.12)", border: "1px solid rgba(52,211,153,0.25)",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     fontSize: "13px", fontWeight: "700", color: "#059669", flexShrink: 0,
                   }}>
@@ -351,19 +281,15 @@ export default function DashboardPage() {
                     <p style={{ margin: 0, fontSize: "13px", fontWeight: "600", color: txt(0.9) }}>
                       {pay.invoices?.client_name ?? "Unknown Client"}
                     </p>
-                    <p style={{ margin: 0, fontSize: "11px", color: txt(0.45) }}>
-                      {pay.payment_date}
-                    </p>
+                    <p style={{ margin: 0, fontSize: "11px", color: txt(0.45) }}>{pay.payment_date}</p>
                   </div>
                 </div>
                 <div style={{
-                  fontFamily: "'Space Mono', monospace",
-                  fontSize: "15px", fontWeight: "700",
+                  fontFamily: "'Space Mono', monospace", fontSize: "15px", fontWeight: "700",
                   background: "linear-gradient(90deg, #059669, #34d399)",
-                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
+                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
                 }}>
-                  +₹{pay.amount_paid.toLocaleString("en-IN")}
+                  +₹{Number(pay.amount_paid).toLocaleString("en-IN")}
                 </div>
               </div>
             ))}
